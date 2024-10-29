@@ -3,7 +3,7 @@ Here's a well-crafted `README.md` file for your **Full-Text Search Engine** proj
 ---
 
 # Full-Text Search Engine
-
+##NOTE: Read the documentation file for complete understanding.
 ## Overview
 This Full-Text Search Engine is designed to efficiently index and search large sets of documents. It supports powerful features such as **inverted indexing**, **auto-suggestions**, and **text tokenization** with stemming and stop-word removal. By implementing multithreaded document processing, the system is optimized for speed and scalability.
 
