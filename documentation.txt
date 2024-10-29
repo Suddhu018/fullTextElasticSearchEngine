@@ -1,0 +1,126 @@
+This is the file fully dedicated to the documentation of this project called "Full Text Search Engine".
+It contains several coding rules, libraries used, capabilities of the project and some of the theoretical concepts needed.
+
+NOTE:- “The project’s main entry point is driverCode”
+
+////////////////////////////////////////////////CODING RULES///////////////////////////////////////////////////////////////////////////////
+1. Use meaningful names for variables and functions to improve code readability and maintainability.
+2. Follow camelCasing for naming variables and functions (e.g., searchQuery, indexDocuments).
+3. Organize code by creating separate files for different functionalities and importing them where needed.
+
+
+////////////////////////////////////////////////LIBRARIES USED///////////////////////////////////////////////////////////////////////////////
+1. C++ STL: For data structures like vectors, maps, etc.
+2. C++ Boost Libraries: For advanced features like stemming and tokenization.
+                        steps to install c++ boost libraries(Mac Os): a. Install Homebrew (if not already installed)
+                                                                      b. Install Boost via Homebrew <brew install boost>
+                                                                      c.Verify Installation <brew info boost>
+                                                                      d. Make changes in the path: In the c++ JSON file include
+                                                                            "includePath": [
+                                                                                            "/opt/homebrew/opt/boost/include",  // Updated Boost path where the boost is installed 
+                                                                                            "${workspaceFolder}/**"
+                                                                                        ],
+                                                                       e. Run the code using : g++ -std=c++17 -I/opt/homebrew/opt/boost/include -L/opt/homebrew/opt/boost/lib -lboost_system -lboost_filesystem driverCode.cpp -o driverCode./driverCode
+
+////////////////////////////////////////////////PROJECT'S CAPABILITIES///////////////////////////////////////////////////////////////////////////////
+
+Goal: Build a search engine that can index and search millions of text documents.
+Key Features:
+1.Efficient Indexing of documents.
+2.Search Queries with support for single words, phrases, etc.
+3.Ranking Algorithm using TF-IDF.
+4.Word Stemming to account for different forms of a word.
+5.Typo Correction for handling minor spelling mistakes.
+6.a. Efficient Index Storage: Compress the index using delta encoding or store posting lists efficiently.
+  b. Parallelize Indexing: Use C++11 Threads to parallelize the indexing process:
+  c. Caching: Cache popular queries using an LRU Cache for faster results.(LRU Cache)
+7. Add a User Interface if possible.
+
+///////////////////////////////////////////////// STEPS INVOLVED////////////////////////////////////////////////////////////////////
+
+Step 1. Setup your environment: Install libraries like c++ boost libraries.
+
+Step 2. Document preprocessing: a. Tokenization
+                                b. Lowercasing and Stop Word Removal
+                                c. Stemming
+
+Step 3. Indexing Documents: a. Building the Inverted Index: For each document Tokenize the document text, add each token (word) to the 
+                               inverted index with its document ID and position.
+                            b. Building the Trie : Insert each token into the Trie for efficient autocomplete suggestions.
+
+Step 4. Implement the Query System: a. Keyword Search
+                                    b. Ranking with TF-IDF
+
+Step 5. Add Advanced Features: a. Word Stemming: Apply stemming both during indexing and querying to ensure different forms of the word are
+                                  treated the same.
+                               b. Typo Correction: Implement Levenshtein Distance for typo correction.
+
+Step 6. Optimize the System:   a. Efficient Index Storage: Compress the index using delta encoding or store posting lists efficiently.
+                               b. Parallelize Indexing: Use C++11 Threads to parallelize the indexing process:
+                               c.Caching: Cache popular queries using an LRU Cache for faster results.
+
+
+///////////////////////////////////////////////// THEORETICAL CONCEPTS/////////////////////////////////////////////////////////////
+
+1. Info about Inverted Index :- a.  An inverted index is a fundamental data structure used to efficiently store and retrieve information
+                                        from a large collection of documents. It is the backbone of the elastic search's powerful and fast 
+                                        full text search capabilities.
+                                b. The inverted index is designed to solve the problem of quickly finding all documents that contains a
+                                       specific term or word in a vast colection of documents. Insted of scanning through each document one
+                                       by one, which can be very time consuming for large dataset the inverted index allows elastic search to 
+                                       peform searches much more efficientl.
+                                c. For each token the inverted index maintains a list of documents ID's where the tokens appears. It creates
+                                       a mapping between each token and corresponding document that contains that token.
+
+
+2. Info about Trie data structure :- a. Trie data structure is use for the prefix matching.
+                                     b. Trie data structure can be used for auto suggestion by featching the top k(here 5) suggestion.
+                                     c. Here we had to twick the basic node structure of the Trie as the text can contain any character
+                                     d. The latest node structure is : class TrieNode{
+                                                                                           public:
+                                                                                           bool isComplete=false;// to know that a particular word is completed or not
+                                                                                           unordered_map<char, TrieNode*> child;// to know that what is the following letter after this letter;
+                                                                                           //this is the modified trie node as the text may contain any character
+                                                                                           TrieNode()
+                                                                                           {}
+                                                                                    };
+3. How cin >> decision Works:    The cin >> decision statement reads a single character (e.g., 'y' or 'n') from the input. 
+                                 However, after reading that character, it leaves the newline character ('\n') in the input buffer. 
+                                 This newline character is produced when the user presses Enter after typing their input.
+
+                                 Problem: Leftover '\n' in the Input Buffer
+                                 The next statement in your code is getline(cin, query);
+                                 The function getline() reads an entire line of input, including spaces, until it encounters a newline character ('\n').
+                                 If there is already a newline character sitting in the input buffer (from the earlier cin >> decision), getline() will think that the newline character is the end of a valid line and will read an empty string. 
+                                 Therefore, the next time the program asks for a query, getline() immediately reads the leftover newline from the previous input and gives the impression that the user entered nothing.
+
+                                 In this case, the output mistakenly uses the previous query ("Do you want to search another word? (y/n)") because the input buffer was not cleared properly.
+
+                                 Why cin.ignore() Solves the Issue
+                                 The function cin.ignore() is used to skip or discard characters from the input buffer. 
+                                 By calling cin.ignore() after reading the decision with cin >> decision, you effectively remove the leftover newline character from the buffer. 
+                                 This ensures that the next call to getline() will wait for new input from the user instead of reading the leftover newline.
+                                 
+///////////////////////////////////////////////// IMPORTANT NOTES /////////////////////////////////////////////////////////////     
+                                                                             
+1. The terminal has the limitations while outputting the text. So after reading the entire text file the terminal wont be 
+   able to output the entire file. But don't worry entire file has been preprocessed and the inverted index has been formed with
+   frequency and document number also the all the tokens has been inserted into the TRIE data structure.
+
+2. Its actually tough to implement the trie auto suggestion in the terminal becuase the terminal do not dynamically changes with
+   each keystroke and do not updates it self unless ENTER is pressed.So to overcome this we need to make the c++ server from scratch
+   and the react frontend to actuall show the autocomplete features.
+
+3. Implemented the LRU cache mechanism so that the top(k) here k=10 searches are cached and the processing time is actually reduced.
+   The LRU cacheis implemented using the doubly linked list.
+
+4. Wherever necessary used the multithreading but kept the notice that the the race condition or deadlock does not occur.
+
+5. The LRU cache will be efficient when there are extremly large number of documents but with small number of documents its not that effective.
+
+6. If the variables is string and we are using cin>> s then this will only read string upto the first whitespace so to read the entire string 
+   use getline(cin,s); ---> This will read eveything.
+
+7. Here what I am doing is that I am tokenizing(processing) the 2 document simultenously with thread and in each thread I am building the inverted index
+   and inserting the token of that thread document simultenously using another thread execution.
+8.nihutuyyhjgk
