@@ -123,4 +123,3 @@ Step 6. Optimize the System:   a. Efficient Index Storage: Compress the index us
 
 7. Here what I am doing is that I am tokenizing(processing) the 2 document simultenously with thread and in each thread I am building the inverted index
    and inserting the token of that thread document simultenously using another thread execution.
-8.nihutuyyhjgk
