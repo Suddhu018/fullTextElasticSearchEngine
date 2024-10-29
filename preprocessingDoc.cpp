@@ -84,6 +84,15 @@ void tokenize(vector<string>& document, unordered_set<string>& stopWords) {
             processDoc2.join();
         }
     }
+
+    // If the number of documents is odd, process the last document
+    if (document.size() % 2 != 0) {
+        thread processLastDoc(threadDocumentProcessing, std::ref(document.back()), std::ref(stopWords), document.size());
+        if (processLastDoc.joinable()) {
+            processLastDoc.join();
+        }
+    }
+
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << duration.count() << " microseconds" << endl;
