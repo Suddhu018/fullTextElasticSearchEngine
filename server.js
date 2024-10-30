@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Route to execute C++ program on GET request
-app.get("/run-cpp", (req, res) => {
+app.get("/", (req, res) => {
   // The string to pass to the C++ program
   const query = req.query.queryWord;
   // Execute the C++ program with the string as an argument
