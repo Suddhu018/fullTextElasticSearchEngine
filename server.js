@@ -1,15 +1,19 @@
 const express = require("express");
 const { exec } = require("child_process");
+const path = require("path");
 
 const app = express();
 const port = 3000;
+
+// Absolute path to the driverCode executable
+const driverCodePath = path.join(__dirname, "driverCode");
 
 // Route to execute C++ program on GET request
 app.get("/", (req, res) => {
   // The string to pass to the C++ program
   const query = req.query.queryWord;
   // Execute the C++ program with the string as an argument
-  exec(`./driverCode ${query}`, (error, stdout, stderr) => {
+  exec(`${driverCodePath} ${query}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error executing program: ${error.message}`);
       return res.status(500).send(`Error: ${error.message}`);
