@@ -12,11 +12,18 @@
 using namespace std;
 using namespace boost::algorithm; // Use the correct namespace
 
-int main()
-{
-    preProcessTheData();/* received the tokens which is stemmed by common words and which are not a stop words
-                                                 and when the above function is called the inverted index is also already called and build*/
-    satisfyQuery();// for the user to ask the query in the terminal
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "No string argument provided" << endl;
+        return 1;
+    }
+
+    string inputString = argv[1];
+
+    preProcessTheData(); // received the tokens which is stemmed by common words and which are not stop words
+                         // and when the above function is called the inverted index is also already called and built
+    satisfyQuery(inputString); // pass the input string to satisfyQuery
+    cout << "This ran successfully" << endl;
 
     return 0;
 }

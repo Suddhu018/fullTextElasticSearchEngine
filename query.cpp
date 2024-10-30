@@ -33,13 +33,13 @@ vector<string> tokenizeQuery(string& query)
        }
 
  }
-void satisfyQuery() {
+void satisfyQuery(string &query) {
     unordered_map<string, unordered_map<int, int>> data = index();
     while(true)
     {
-        cout << "Enter the senetence/word you want to search: ";
-        string query;
-        getline(cin, query);//--> dont use cin>>query as this will only read upto first white space.
+        // cout << "Enter the senetence/word you want to search: ";
+        // string query="english";
+        // getline(cin, query);//--> dont use cin>>query as this will only read upto first white space.
         //to tokenize the inout query and stop word removal
         vector<string> allQueryTokens= tokenizeQuery(query);//al ready converted to lower case here
         for(auto lowerToken:allQueryTokens)
@@ -61,10 +61,11 @@ void satisfyQuery() {
             }
 
         }
-        cout<<"Do you want to search another word? (y/n) ";
-        char decision;
-        cin>>decision;
-        if (decision == 'n' || decision == 'N') break;
-        cin.ignore();  // Ignore the leftover newline character from the decision cin>>
+        // cout<<"Do you want to search another word? (y/n) ";
+        // char decision;
+        // cin>>decision;
+        // if (decision == 'n' || decision == 'N') break;
+        // cin.ignore();  // Ignore the leftover newline character from the decision cin>>
+        break;
     }
 }
