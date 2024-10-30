@@ -122,17 +122,46 @@ string readFile(const string& filePath) {
             return "";
         }
     }
-vector<string> readDocuments(const string& folderPath) {
-    vector<string> documents;
-    // Iterate through all files in the folder
-    for (const auto& entry : fs::directory_iterator(folderPath)) {
-        if (entry.path().extension() == ".txt") {  // Only process .txt files
-            string content = readFile(entry.path().string());
+    void readUsingThreading(const vector<fs::path>& files, vector<string>& documents) {
+    for (const auto& file : files) {
+        if (file.extension() == ".txt") {  // Only process .txt files
+            string content = readFile(file.string());
             if (!content.empty()) {
                 documents.push_back(content);
             }
         }
     }
+}
+vector<string> readDocuments(const string& folderPath) {
+    vector<string> documents;
+    vector<fs::path> files;
+
+    // Collect all files in the folder
+    for (const auto& entry : fs::directory_iterator(folderPath)) {
+        files.push_back(entry.path());
+    }
+
+    // Split the files into two halves
+    size_t mid = files.size() / 2;
+    vector<fs::path> firstHalf(files.begin(), files.begin() + mid);
+    vector<fs::path> secondHalf(files.begin() + mid, files.end());
+
+    // Create threads to process each half
+    vector<string> documents1, documents2;
+    auto start = high_resolution_clock::now();
+    thread t1(readUsingThreading, firstHalf, ref(documents1));
+    thread t2(readUsingThreading, secondHalf, ref(documents2));
+
+    // Wait for both threads to finish
+    t1.join();
+    t2.join();
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << duration.count() << " microseconds to actually read all the files" << endl;
+    // Combine the results
+    documents.insert(documents.end(), documents1.begin(), documents1.end());
+    documents.insert(documents.end(), documents2.begin(), documents2.end());
+
     return documents;
 }
 void preProcessTheData()//to preprocess the document present in the document folder
