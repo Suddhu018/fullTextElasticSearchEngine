@@ -49,6 +49,7 @@ vector<string> tokenizeQuery(string& query)
  }
 void satisfyQuery(string &query) {
     unordered_map<string, unordered_map<int, int>> data = index();
+    cout<<"Your query is: "<<query<<endl;
     while(true)
     {
         vector<string> allQueryTokens= tokenizeQuery(query);//all ready converted to lower case here
