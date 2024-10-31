@@ -95,8 +95,8 @@ class LRUcache{
 unordered_map<int,int> LRU_Query(string wordSearched)
 {
     auto result=initial.getStoredResult(wordSearched);
-    if(result.size()==0)cout<<"Not present in LRU"<<endl;
-    else cout<<"Present in LRU"<<endl;
+    // if(result.size()==0)cout<<"Not present in LRU"<<endl;
+    // else cout<<"Present in LRU"<<endl;
     return result;
 }
 void insertLRUQuery(string &wordSearched, unordered_map<int, int>&data)

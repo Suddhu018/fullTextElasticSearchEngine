@@ -25,47 +25,60 @@ vector<string> tokenizeQuery(string& query)
         }
         return tokens;
 }
- void print(unordered_map<int, int>&data,string& lowerToken)
+ void print(vector<int>& result)
  {
-     for (const auto& x : data) {
-                    cout << "The word \"" << lowerToken << "\" was found in document number " << x.first 
-                        << " and its frequency is " << x.second << endl;
+     for (const auto& x : result) {
+                    cout << "The searched sentence was found in document number " << x << endl;
        }
 
+ }
+ vector<int> processIntersectionOfDocumentId(vector<vector<int>>& docNUM)
+ {
+        vector<int> ans;
+        unordered_map<int,int> mp;
+        for(auto it: docNUM)
+        {
+            for(auto x:it)mp[x]++;
+        }
+        for(auto it:mp)
+        {
+            if(it.second==docNUM.size())ans.push_back(it.first);
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
  }
 void satisfyQuery(string &query) {
     unordered_map<string, unordered_map<int, int>> data = index();
     while(true)
     {
-        // cout << "Enter the senetence/word you want to search: ";
-        // string query="english";
-        // getline(cin, query);//--> dont use cin>>query as this will only read upto first white space.
-        //to tokenize the inout query and stop word removal
-        vector<string> allQueryTokens= tokenizeQuery(query);//al ready converted to lower case here
+        vector<string> allQueryTokens= tokenizeQuery(query);//all ready converted to lower case here
+        vector<vector<int>> docNUM;
         for(auto lowerToken:allQueryTokens)
         {
                 auto result=LRU_Query(lowerToken);//check that the result is present in LRU cache or not
             if(result.size()!=0)// yes presnt in LRU cache
             {
-                print(result,lowerToken);
+                // print(result,lowerToken);
             }
             else{// not present in LRU cache
                     auto it = data.find(lowerToken); // Use find() to check if the word exists in the inverted index
-
+                    vector<int> temp;
                     if (it != data.end()) { // Check if the word was found
-                        print(it->second,lowerToken);
-                        insertLRUQuery(lowerToken,it->second);
+                        for (const auto& x : it->second) {
+                            temp.push_back(x.first);
+                        }
+                        docNUM.push_back(temp);
+                        // print(it->second,lowerToken);
+                        // insertLRUQuery(lowerToken,it->second);
                     } else {
-                        cout << "The word \"" << lowerToken << "\" was not found in any document." << endl;
+                        cout << "The searched sentence was not found in any document." << endl;
+                        break;//as we are searchung for a complete sentence so if one word is not found then the whole sentence is not found.
                     }
             }
 
         }
-        // cout<<"Do you want to search another word? (y/n) ";
-        // char decision;
-        // cin>>decision;
-        // if (decision == 'n' || decision == 'N') break;
-        // cin.ignore();  // Ignore the leftover newline character from the decision cin>>
+        vector<int> result=processIntersectionOfDocumentId(docNUM);
+        print(result);
         break;
     }
 }
