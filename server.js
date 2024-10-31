@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Route to execute C++ program on GET request
-app.get("/search", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello World I am server");
 });
 app.get("/search", (req, res) => {
