@@ -7,7 +7,6 @@
 #include <bits/stdc++.h>
 #include "preprocessingDoc.cpp" //to preprocess the data saved in the documents folder
 #include <boost/algorithm/string.hpp>// to use the features of the boost library
-#include <thread>// to use the multithreadig functionality of c++
 #include "query.cpp"
 using namespace std;
 using namespace boost::algorithm; // Use the correct namespace
