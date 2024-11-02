@@ -127,7 +127,6 @@ string readFile(const string& filePath) {
 void processFiles(const vector<fs::path>& files, vector<string>& documents, unordered_map<int, string>& docName, int startIdx) {
     for (size_t i = 0; i < files.size(); ++i) {
         const auto& file = files[i];
-        cout << file.filename() << endl;
         if (file.extension() == ".txt") {  // Only process .txt files
             string content = readFile(file.string());
             if (!content.empty()) {
