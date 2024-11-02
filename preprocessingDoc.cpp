@@ -60,12 +60,8 @@ void threadDocumentProcessing(string& data,unordered_set<string>& stopWords,int 
 //to split or make tokens of the document words
 void tokenize(vector<string>& document, unordered_set<string>& stopWords) {
     vector<string> tokens;
-    cout << "The size of the document is: " << document.size() << endl;
+    cout << "The size of the document is: " << document.size() << endl;// represent the total number of text files
     auto start = high_resolution_clock::now();
-    // for(int i=0;i<document.size();i++)
-    // {
-    //     threadDocumentProcessing(document[i],stopWords,i+1);
-    // }
     for (int i = 0; i < document.size(); i += 2) {
         // Create threads for each document
         thread processDoc1(threadDocumentProcessing, std::ref(document[i]), std::ref(stopWords), i + 1);
