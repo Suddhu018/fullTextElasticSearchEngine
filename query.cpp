@@ -31,6 +31,7 @@ vector<string> tokenizeQuery(string& query)
      for (const auto& x : result) {
                     cout << "The searched sentence was found in the document : "<<docName[x]<< endl;
        }
+       return;
 
  }
  vector<int> processIntersectionOfDocumentId(vector<vector<int>>& docNUM)// to find the intersection of n number of arrays (Leetcode Question)
