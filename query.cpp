@@ -27,12 +27,13 @@ vector<string> tokenizeQuery(string& query)
 }
  void print(vector<int>& result)
  {
+    for(auto it:docName)cout<<it.second<<endl;
      for (const auto& x : result) {
-                    cout << "The searched sentence was found in document number " << x << endl;
+                    cout << "The searched sentence was found in the document. And the name of the document is : "<<docName[x]<< endl;
        }
 
  }
- vector<int> processIntersectionOfDocumentId(vector<vector<int>>& docNUM)
+ vector<int> processIntersectionOfDocumentId(vector<vector<int>>& docNUM)// to find the intersection of n number of arrays (Leetcode Question)
  {
         vector<int> ans;
         unordered_map<int,int> mp;
@@ -53,7 +54,7 @@ void satisfyQuery(string &query) {
     while(true)
     {
         vector<string> allQueryTokens= tokenizeQuery(query);//all ready converted to lower case here
-        vector<vector<int>> docNUM;
+        vector<vector<int>> docNUM;// to note down the documents where these words are found so that it can be to find the intersection later
         for(auto lowerToken:allQueryTokens)
         {
                 auto result=LRU_Query(lowerToken);//check that the result is present in LRU cache or not

@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <thread>
 namespace fs = std::filesystem;
 using namespace std::chrono;
 using namespace std;
@@ -22,6 +23,7 @@ unordered_set<string> stopWords={"i", "me", "my", "myself", "we", "our", "ours",
         "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", 
         "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", 
         "s", "t", "can", "will", "just", "don", "should", "now"};
+unordered_map<int,string> docName;// to store the name of the document corresponding to the document number;
 // to convert the tokens to the lower case
 string toLowercase(const string& token) {
     string lowerToken = token;
@@ -112,27 +114,31 @@ void processDocument(unordered_set<string>& stopWords, vector<string>& document)
 }
 
 string readFile(const string& filePath) {
-    ifstream file(filePath, ios::in | ios::binary);
-    if (file.is_open()) {
-        stringstream buffer;
-        buffer << file.rdbuf();  // Read entire file content into a buffer
-        return buffer.str();     // Return the content as a string
-        } else {
-            cerr << "Could not open file: " << filePath << endl;
-            return "";
-        }
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cerr << "Could not open the file: " << filePath << endl;
+        return "";
     }
-    void readUsingThreading(const vector<fs::path>& files, vector<string>& documents) {
-    for (const auto& file : files) {
+    string content((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
+    file.close();
+    return content;
+}
+
+void processFiles(const vector<fs::path>& files, vector<string>& documents, unordered_map<int, string>& docName, int startIdx) {
+    for (size_t i = 0; i < files.size(); ++i) {
+        const auto& file = files[i];
+        cout << file.filename() << endl;
         if (file.extension() == ".txt") {  // Only process .txt files
             string content = readFile(file.string());
             if (!content.empty()) {
                 documents.push_back(content);
+                docName[startIdx + i] = file.filename().string();
             }
         }
     }
 }
-vector<string> readDocuments(const string& folderPath) {
+
+vector<string> readDocuments(const string& folderPath, unordered_map<int, string>& docName) {
     vector<string> documents;
     vector<fs::path> files;
 
@@ -148,26 +154,30 @@ vector<string> readDocuments(const string& folderPath) {
 
     // Create threads to process each half
     vector<string> documents1, documents2;
+    unordered_map<int, string> docName1, docName2;
     auto start = high_resolution_clock::now();
-    thread t1(readUsingThreading, firstHalf, ref(documents1));
-    thread t2(readUsingThreading, secondHalf, ref(documents2));
+    thread t1(processFiles, ref(firstHalf), ref(documents1), ref(docName1), 0);
+    thread t2(processFiles, ref(secondHalf), ref(documents2), ref(docName2), mid);
 
-    // Wait for both threads to finish
+    // Wait for threads to finish
     t1.join();
     t2.join();
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << duration.count() << " microseconds to actually read all the files" << endl;
-    // Combine the results
+    // Combine results from both threads
     documents.insert(documents.end(), documents1.begin(), documents1.end());
     documents.insert(documents.end(), documents2.begin(), documents2.end());
+    docName.insert(docName1.begin(), docName1.end());
+    docName.insert(docName2.begin(), docName2.end());
 
     return documents;
 }
+
 void preProcessTheData()//to preprocess the document present in the document folder
 {
     string folderPath = "Documents";
-    vector<string> document=readDocuments(folderPath);//this is where all the tokens are which is present in document and will be processed.
+    vector<string> document=readDocuments(folderPath, docName);//this is where all the tokens are which is present in document and will be processed.
     processDocument(stopWords,document);
 }
 #endif
