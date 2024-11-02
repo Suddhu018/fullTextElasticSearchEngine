@@ -9,7 +9,7 @@ using namespace std;
 unordered_map<string, int> memo;
 
 int levenshteinDistanceHelper(const string& s1, const string& s2, int m, int n) {
-    string key = to_string(m) + "," + to_string(n);
+    string key = to_string(m) + "," + to_string(n);//trick used taki 2D dp ka condition na bane and memory could be saved
     if (memo.find(key) != memo.end()) return memo[key];
 
     if (m == 0) return n;
