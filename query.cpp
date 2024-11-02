@@ -28,7 +28,6 @@ vector<string> tokenizeQuery(string& query)
 }
  void print(vector<int>& result)
  {
-    for(auto it:docName)cout<<it.second<<endl;
      for (const auto& x : result) {
                     cout << "The searched sentence was found in the document : "<<docName[x]<< endl;
        }
