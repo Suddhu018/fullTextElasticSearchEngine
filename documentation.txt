@@ -42,7 +42,6 @@ Step 1. Setup your environment: Install libraries like c++ boost libraries.
 
 Step 2. Document preprocessing: a. Tokenization
                                 b. Lowercasing and Stop Word Removal
-                                c. Stemming
 
 Step 3. Indexing Documents: a. Building the Inverted Index: For each document Tokenize the document text, add each token (word) to the 
                                inverted index with its document ID and position.
@@ -51,9 +50,7 @@ Step 3. Indexing Documents: a. Building the Inverted Index: For each document To
 Step 4. Implement the Query System: a. Keyword Search
                                     b. Ranking with TF-IDF
 
-Step 5. Add Advanced Features: a. Word Stemming: Apply stemming both during indexing and querying to ensure different forms of the word are
-                                  treated the same.
-                               b. Typo Correction: Implement Levenshtein Distance for typo correction.
+Step 5. Add Advanced Features: a. Typo Correction: Implement Levenshtein Distance for typo correction.
 
 Step 6. Optimize the System:   a. Efficient Index Storage: Compress the index using delta encoding or store posting lists efficiently.
                                b. Parallelize Indexing: Use C++11 Threads to parallelize the indexing process:
@@ -100,7 +97,9 @@ Step 6. Optimize the System:   a. Efficient Index Storage: Compress the index us
                                  The function cin.ignore() is used to skip or discard characters from the input buffer. 
                                  By calling cin.ignore() after reading the decision with cin >> decision, you effectively remove the leftover newline character from the buffer. 
                                  This ensures that the next call to getline() will wait for new input from the user instead of reading the leftover newline.
-                                 
+
+4. Typo Correction : This is acheived by EDIT DISTANCE (Question on Leetcode). The string whichever have the minimum distance from the query word , can be the intended word which user 
+                     wanted to insert.           
 ///////////////////////////////////////////////// IMPORTANT NOTES /////////////////////////////////////////////////////////////     
                                                                              
 1. The terminal has the limitations while outputting the text. So after reading the entire text file the terminal wont be 
