@@ -176,7 +176,7 @@ vector<string> readDocuments(const string& folderPath, unordered_map<int, string
 void preProcessTheData()//to preprocess the document present in the document folder
 {
     string folderPath = "Documents";
-    vector<string> document=readDocuments(folderPath, docName);//this is where all the tokens are which is present in document and will be processed.
+    vector<string> document=readDocuments(folderPath, docName);//this is where all the files are stored as a string
     processDocument(stopWords,document);
 }
 #endif
