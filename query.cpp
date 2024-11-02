@@ -3,6 +3,7 @@
 #include "invertedIndex.cpp"      // Include the header instead of the source file.
 #include "preprocessingDoc.cpp"   // Include the header instead of the source file.
 #include "LRUcache.cpp"
+#include "typoCorrection.cpp"
 #include <thread>
 #include <chrono>
 using namespace std::chrono;
@@ -29,7 +30,7 @@ vector<string> tokenizeQuery(string& query)
  {
     for(auto it:docName)cout<<it.second<<endl;
      for (const auto& x : result) {
-                    cout << "The searched sentence was found in the document. And the name of the document is : "<<docName[x]<< endl;
+                    cout << "The searched sentence was found in the document : "<<docName[x]<< endl;
        }
 
  }
@@ -51,8 +52,6 @@ vector<string> tokenizeQuery(string& query)
 void satisfyQuery(string &query) {
     unordered_map<string, unordered_map<int, int>> data = index();
     cout<<"Your query is: "<<query<<endl;
-    while(true)
-    {
         vector<string> allQueryTokens= tokenizeQuery(query);//all ready converted to lower case here
         vector<vector<int>> docNUM;// to note down the documents where these words are found so that it can be to find the intersection later
         for(auto lowerToken:allQueryTokens)
@@ -73,14 +72,13 @@ void satisfyQuery(string &query) {
                         // print(it->second,lowerToken);
                         // insertLRUQuery(lowerToken,it->second);
                     } else {
-                        cout << "The searched sentence was not found in any document." << endl;
-                        break;//as we are searchung for a complete sentence so if one word is not found then the whole sentence is not found.
+                        cout << "The searched sentence was not found in any document because this word "<<lowerToken <<" was not found anywhere"<< endl;
+                        cout<<"Did you mean to search "<<findClosestMatch(lowerToken,data)<<" ?"<<endl;
+                       return;//as we are searchung for a complete sentence so if one word is not found then the whole sentence is not found.
                     }
             }
 
         }
         vector<int> result=processIntersectionOfDocumentId(docNUM);
         print(result);
-        break;
-    }
 }
