@@ -27,26 +27,45 @@ class Trie{
         }
         node->isComplete = true;  // Mark the end of the word
     }
-    bool isPresent(string &word)
+    void allWordsWithPrefixHelper(string &prefix, TrieNode* node, vector<string> &allWords)
     {
+        if (node->isComplete) {
+            allWords.push_back(prefix);
+        }
+        for (auto &it : node->child) {
+            prefix.push_back(it.first);
+            allWordsWithPrefixHelper(prefix, it.second, allWords);
+            prefix.pop_back();
+        }
+    }
+    vector<string> allWordsWithPrefix(string &prefix)
+    {
+        vector<string> allWords;
         TrieNode* node = root;
-        for (auto &ch : word) {
+        for (auto &ch : prefix) {
             if (node->child.find(ch) == node->child.end()) {
-                return false;
+                return allWords;
             }
             node = node->child[ch];
         }
-        return node->isComplete;
+        allWordsWithPrefixHelper(prefix, node, allWords);
+        return allWords;
     }
 
-};
+} rootBase;
 
 void insertIntoTrie(vector<string> &words)
 {
-    Trie root;//the process to insert into a trie is triggerd using this root;
+
     for(auto it: words)
     {
-        root.insert(it);
+        rootBase.insert(it);
     }
     return;
 }
+vector<string> allWordsWithPrefix(string &prefix)
+{
+    Trie rootBase;
+    return rootBase.allWordsWithPrefix(prefix);
+}
+// Time Complexity: O(N) where N is the length of the word
