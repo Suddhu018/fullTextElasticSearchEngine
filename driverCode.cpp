@@ -9,6 +9,8 @@
 #include "preprocessingDoc.cpp" //to preprocess the data saved in the documents folder
 #include <boost/algorithm/string.hpp>// to use the features of the boost library
 #include "query.cpp"
+#include <sstream>
+
 using namespace std;
 using namespace boost::algorithm; // Use the correct namespace
 
@@ -25,10 +27,21 @@ int main() {
             return crow::response(400, "Query parameter is missing");
         }
 
+        // Redirect cout to a string stream
+        std::ostringstream oss;
+        std::streambuf* oldCoutStreamBuf = std::cout.rdbuf();
+        std::cout.rdbuf(oss.rdbuf());
+
         string inputString = query;
         satisfyQuery(inputString);
 
-        return crow::response(200, "This ran successfully");
+        // Restore the original cout buffer
+        std::cout.rdbuf(oldCoutStreamBuf);
+
+        // Get the captured output
+        string capturedOutput = oss.str();
+
+        return crow::response(200, capturedOutput);
     });
 
     app.port(8080).multithreaded().run();
