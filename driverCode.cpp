@@ -5,24 +5,33 @@
 
 */
 #include <bits/stdc++.h>
+#include "crow_all.h"
 #include "preprocessingDoc.cpp" //to preprocess the data saved in the documents folder
 #include <boost/algorithm/string.hpp>// to use the features of the boost library
 #include "query.cpp"
 using namespace std;
 using namespace boost::algorithm; // Use the correct namespace
 
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        cout << "No string argument provided" << endl;
-        return 1;
-    }
+int main() {
+    // Preprocess the data once
+    preProcessTheData();
 
-    string inputString = argv[1];
+    crow::SimpleApp app;
 
-    preProcessTheData(); // received the tokens which is stemmed by common words and which are not stop words
-                         // and when the above function is called the inverted index is also already called and built
-    satisfyQuery(inputString); // pass the input string to satisfyQuery
-    cout << "This ran successfully" << endl;
+    CROW_ROUTE(app, "/search")
+    ([](const crow::request& req) {
+        auto query = req.url_params.get("query");
+        if (!query) {
+            return crow::response(400, "Query parameter is missing");
+        }
+
+        string inputString = query;
+        satisfyQuery(inputString);
+
+        return crow::response(200, "This ran successfully");
+    });
+
+    app.port(8080).multithreaded().run();
 
     return 0;
 }

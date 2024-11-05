@@ -4,7 +4,10 @@
       "name": "Mac",
       "includePath": [
         "/opt/homebrew/opt/boost/include", // Boost headers
-        "${workspaceFolder}/**"
+        "/opt/homebrew/include", // General include folder
+        "/usr/local/include", // General include folder
+        "${workspaceFolder}/**", // Workspace folder
+        "${workspaceFolder}" // Include current workspace for crow_all.h
       ],
       "defines": [],
       "macFrameworkPath": [
