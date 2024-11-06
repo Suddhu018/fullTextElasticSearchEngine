@@ -1,3 +1,5 @@
+#ifndef TRIE_AUTO // Include guard
+#define TRIE_AUTO
 // Trie dataStructure for Auto-Suggestions(Prefix Tree)
 #include<bits/stdc++.h>
 using namespace std;
@@ -6,8 +8,6 @@ class TrieNode{
     bool isComplete=false;// to know that a particular word is completed or not
     unordered_map<char, TrieNode*> child;// to know that what is the following letter after this letter;
     //this is the modified trie node as the text may contain any character
-    TrieNode()
-    {}
 };
 class Trie{
     public:
@@ -38,12 +38,13 @@ class Trie{
             prefix.pop_back();
         }
     }
-    vector<string> allWordsWithPrefix(string &prefix)
+    vector<string> allWordsWithPrefixFinder(string &prefix)
     {
         vector<string> allWords;
         TrieNode* node = root;
         for (auto &ch : prefix) {
             if (node->child.find(ch) == node->child.end()) {
+                cout<<"No words with this prefix"<<endl;
                 return allWords;
             }
             node = node->child[ch];
@@ -52,12 +53,12 @@ class Trie{
         return allWords;
     }
 
-} rootBase;
+}rootBase;
 
 void insertIntoTrie(vector<string> &words)
 {
 
-    for(auto it: words)
+    for(auto &it: words)
     {
         rootBase.insert(it);
     }
@@ -65,7 +66,9 @@ void insertIntoTrie(vector<string> &words)
 }
 vector<string> allWordsWithPrefix(string &prefix)
 {
-    Trie rootBase;
-    return rootBase.allWordsWithPrefix(prefix);
+    cout<<"call received"<<endl;
+     vector<string> tempRes=rootBase.allWordsWithPrefixFinder(prefix);
+     return tempRes;
 }
 // Time Complexity: O(N) where N is the length of the word
+#endif
