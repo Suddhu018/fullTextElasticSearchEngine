@@ -5,13 +5,13 @@ using namespace std;
 
 class LRU_Node{// this is the node defination of the double linked list(which is used for the LRU implementation)
     public:
-    string wordSearched;
-    unordered_map<int, int> data;
+    string sentenceSearched;
+    vector<int> data;
     LRU_Node* next=NULL;
     LRU_Node* prev=NULL;
-    LRU_Node(string wordSearched, unordered_map<int, int>&data)// ye jo hai bhaiya who constructor hai
+    LRU_Node(string sentenceSearched, vector<int>&data)// ye jo hai bhaiya who constructor hai
     {
-        this-> wordSearched=wordSearched;
+        this-> sentenceSearched=sentenceSearched;
         this->data=data;
     }
 
@@ -23,12 +23,12 @@ class LRUcache{
     LRU_Node* head=NULL;// to track the head of the DLL(double linked list) (to indicate the latest recently used)
     LRU_Node* tail=NULL;// to track the tail of the DLL(to indicate what least recently used)
     unordered_map<string, LRU_Node*> mp;// to store the node address to reach there in constant time otherwise it will take O(n) time
-    unordered_map<int,int> getStoredResult(string &wordSearched)
+    vector<int> getStoredResult(string &sentenceSearched)
     {
-        if (mp.find(wordSearched) == mp.end()) {
-            return unordered_map<int,int> (); // key not found returning an empty unordered_map
+        if (mp.find(sentenceSearched) == mp.end()) {
+            return vector<int> (); // key not found returning an empty unordered_map
         }
-        LRU_Node* node=mp[wordSearched];
+        LRU_Node* node=mp[sentenceSearched];
         if (node != head) {
             // Remove the node from its current position
             if (node->prev) {
@@ -57,17 +57,17 @@ class LRUcache{
         return node->data;
     }
 
-    void putSearchedWord(string wordSearched, unordered_map<int, int>&data)// insert into DLL if the size < capacity else remove the least recently used and then insert
+    void putSearchedWord(string sentenceSearched, vector<int>& data)// insert into DLL if the size < capacity else remove the least recently used and then insert
     {
-        if (mp.find(wordSearched) != mp.end()) {
+        if (mp.find(sentenceSearched) != mp.end()) {
             // Update the value and move to head
-            LRU_Node* node = mp[wordSearched];
+            LRU_Node* node = mp[sentenceSearched];
             node->data=data;
-            getStoredResult(wordSearched); // Reuse get to move the node to the head
+            getStoredResult(sentenceSearched); // Reuse get to move the node to the head
         }
         else {
             // Create a new node
-            LRU_Node* node = new LRU_Node(wordSearched,data);
+            LRU_Node* node = new LRU_Node(sentenceSearched,data);
             if (!head) {
                 head = tail = node;
             } else {
@@ -75,7 +75,7 @@ class LRUcache{
                 head->prev = node;
                 head = node;
             }
-            mp[wordSearched] = node;
+            mp[sentenceSearched] = node;
 
             // If the cache exceeds capacity, remove the LRU node
             if (mp.size() > capacity) {
@@ -84,7 +84,7 @@ class LRUcache{
                     tail->prev->next = NULL;
                 }
                 tail = tail->prev;
-                mp.erase(lru->wordSearched);
+                mp.erase(lru->sentenceSearched);
                 delete lru;
             }
         }
@@ -92,15 +92,15 @@ class LRUcache{
     }
 } initial;
 
-unordered_map<int,int> LRU_Query(string wordSearched)
+vector<int> LRU_Query(string sentenceSearched)
 {
-    auto result=initial.getStoredResult(wordSearched);
-    // if(result.size()==0)cout<<"Not present in LRU"<<endl;
-    // else cout<<"Present in LRU"<<endl;
+    auto result=initial.getStoredResult(sentenceSearched);
+    if(result.size()==0)cout<<"Not present in LRU"<<endl;
+    else cout<<"Present in LRU"<<endl;
     return result;
 }
-void insertLRUQuery(string &wordSearched, unordered_map<int, int>&data)
+void insertLRUQuery(string &sentenceSearched,vector<int>& data)
 {
-    initial.putSearchedWord(wordSearched,data);
+    initial.putSearchedWord(sentenceSearched,data);
     return;
 }

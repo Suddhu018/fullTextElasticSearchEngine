@@ -28,7 +28,8 @@ int main() {
         }
 
         string inputString = query;
-        satisfyQuery(inputString);
+        vector<int> finalResult=satisfyQuery(inputString);
+        print(finalResult);
         return crow::response(200, "everything worked perfectly");
     });
 
