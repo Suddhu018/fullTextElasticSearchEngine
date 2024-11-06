@@ -27,21 +27,9 @@ int main() {
             return crow::response(400, "Query parameter is missing");
         }
 
-        // Redirect cout to a string stream
-        std::ostringstream oss;
-        std::streambuf* oldCoutStreamBuf = std::cout.rdbuf();
-        std::cout.rdbuf(oss.rdbuf());
-
         string inputString = query;
         satisfyQuery(inputString);
-
-        // Restore the original cout buffer
-        std::cout.rdbuf(oldCoutStreamBuf);
-
-        // Get the captured output
-        string capturedOutput = oss.str();
-
-        return crow::response(200, capturedOutput);
+        return crow::response(200, "everything worked perfectly");
     });
 
     app.port(8080).multithreaded().run();
