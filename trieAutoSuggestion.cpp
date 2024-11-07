@@ -20,6 +20,7 @@ class Trie{
     {
        TrieNode* node = root;
         for (auto &ch : wordToInsert) {
+             ch = tolower(ch); // Converting the character to lower case
             if (node->child.find(ch) == node->child.end()) {
                 node->child[ch] = new TrieNode();
             }
@@ -42,7 +43,9 @@ class Trie{
     {
         vector<string> allWords;
         TrieNode* node = root;
+        for(auto it:node->child)cout<<it.first<<" ";
         for (auto &ch : prefix) {
+             ch = tolower(ch); // Converting the character to lower case
             if (node->child.find(ch) == node->child.end()) {
                 cout<<"No words with this prefix"<<endl;
                 return allWords;
@@ -66,9 +69,8 @@ void insertIntoTrie(vector<string> &words)
 }
 vector<string> allWordsWithPrefix(string &prefix)
 {
-    cout<<"call received"<<endl;
-     vector<string> tempRes=rootBase.allWordsWithPrefixFinder(prefix);
-     return tempRes;
+    cout<<"call received for"<<prefix<<endl;
+    return rootBase.allWordsWithPrefixFinder(prefix);
 }
 // Time Complexity: O(N) where N is the length of the word
 #endif
